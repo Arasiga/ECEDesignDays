@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <title> ECE Design Days </title>
+  <link rel="stylesheet" href="./styles.css" >
+  <!-- <script type="text/javascript" src="jquery-1.8.3.js"></script> -->
+  <script src="./node_modules/socket.io-client/dist/socket.io.js"></script>
+  <script type="text/javascript">
+  window.onload = function() {
+    document.onkeydown = checkKey;
+    document.onkeyup = keyup;
+
+    var data = {
+      down: "false",
+      up: "false",
+      right: "false",
+      left: "false",
+      z: "false",
+      x: "false"
+    }
+
+    var speedData = {
+      speedRight: document.getElementById('speed_1').value,
+      speedLeft: document.getElementById('speed_2').value
+    }
+
+    // socket.emit('speed', speedData);
+
+    function checkKey(e) {
+      e = e || window.event;
+      if (e.keyCode == '38') {
+        // up arrow
+        document.getElementById('up').style.backgroundColor = "yellow";
+        data.up = "true";
+        socket.emit('join', data);
+      }
+      else if (e.keyCode == '40') {
+        // down arrow
+        document.getElementById('down').style.backgroundColor = "yellow";
+        data.down = "true";
+        socket.emit('join', data);
+      }
+      else if (e.keyCode == '37') {
+        // left arrow
+        document.getElementById('left').style.backgroundColor = "yellow";
+        data.left = "true";
+        socket.emit('join', data);
+      }
+      else if (e.keyCode == '39') {
+        // right arrow
+        document.getElementById('right').style.backgroundColor = "yellow";
+        data.right = "true";
+        socket.emit('join', data);
+      }
+      else if (e.keyCode == '90') {
+        // z arrow
+        document.getElementById('z').style.backgroundColor = "yellow";
+        data.z = "true";
+        socket.emit('join', data);
+      }
+      else if (e.keyCode == '88') {
+        // x key
+        document.getElementById('x').style.backgroundColor = "yellow";
+        data.x = "true";
+        socket.emit('join', data);
+      }
+    }
+
+    function keyup(e) {
+      e = e || window.event;
+      if (e.keyCode == '38') {
+        // up arrow
+        document.getElementById('up').style.backgroundColor = "white";
+        data.up = "false";
+        socket.emit('join', data);
+      }
+      else if (e.keyCode == '40') {
+        // down arrow
+        document.getElementById('down').style.backgroundColor = "white";
+        data.down = "false";
+        socket.emit('join', data);
+      }
+      else if (e.keyCode == '37') {
+        // left arrow
+        document.getElementById('left').style.backgroundColor = "white";
+        data.left = "false";
+        socket.emit('join', data);
+      }
+      else if (e.keyCode == '39') {
+        // right arrow
+        document.getElementById('right').style.backgroundColor = "white";
+        data.right = "false";
+        socket.emit('join', data);
+      }
+      else if (e.keyCode == '90') {
+        // z key
+        document.getElementById('z').style.backgroundColor = "white";
+        data.z = "false";
+        socket.emit('join', data);
+      }
+      else if (e.keyCode == '88') {
+        // x key
+        document.getElementById('x').style.backgroundColor = "white";
+        data.x = "false";
+        socket.emit('join', data);
+      }
+    }
+    // debugger;
+
+    // Take care of setting speed
+    var setBtn = document.getElementById('set');
+
+    setBtn.addEventListener('click', function(event) {
+      var speed1 = document.getElementById('speed_1').value;
+      var speed2 = document.getElementById('speed_2').value;
+      console.log(speedData);
+      // socket.emit('speed', )
+    });
+
+    // CONNECTING TO SOCKETS
+    var socket = io('http://localhost:3000');
+    socket.on('connect', function(data) { });
+
+  }
+  </script>
+
+</head>
+<body style='font-family: Roboto; text-align: center;'>
+
+  <div class="row" style="margin-right: 0px !important; margin-left: 0px !important;">
+    <div class="col-lg-6">
+      <h1> Tetrix Servos </h1>
+      <p style="margin-top: 25px;"> Use arrow keys to navigate </p>
+      <p> Use Z and X keys to navigate Pitching Machine angle </p>
+      <div style="margin-top: 70px;">
+        <img id="up" class="rotate90" src="./Images/arrow.svg" height="44px" width="44px"/>
+      </div>
+      <div>
+        <img id="left" src="./Images/arrow.svg" height="44px" width="44px"/>
+        <img id="down" class="rotate270" src="./Images/arrow.svg" height="44px" width="44px"/>
+        <img id="right" class="rotate180" src="./Images/arrow.svg" height="44px" width="44px"/>
+      </div>
+      <div style="margin-top: 50px;">
+        <img id="z" src="./Images/z.svg" height="44px" width="44px"/>
+        <img id="x" src="./Images/x.svg" height="44px" width="44px"/>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <h1> Pitching Machine Settings </h1>
+      <p style="margin-top: 25px;"> Configure pitching machine settings here </p>
+
+      <div class="input-group input-group-lg" style="width: 500px; margin: auto; margin-top: 55px;">
+        <span class="input-group-addon" id="sizing-addon1">Set left wheel speed</span>
+        <input id="speed_1" name="speed_1" type="text" value="100" class="form-control" placeholder="Speed" aria-describedby="sizing-addon1" />
+      </div>
+      <div class="input-group input-group-lg" style="width: 500px; margin: auto; margin-top: 15px;">
+        <span class="input-group-addon" id="sizing-addon1">Set right wheel speed</span>
+        <input id="speed_2" name="speed_2" type="text" value="100" class="form-control" placeholder="Speed" aria-describedby="sizing-addon1" />
+      </div>
+
+      <button id="set" type="button" style="margin-top: 25px;" class="btn btn-success">Set!</button>
+
+    </div>
+  </div>
+
+</body>
+</html>
